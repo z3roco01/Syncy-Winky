@@ -1,0 +1,33 @@
+{
+	"schemaVersion": 1,
+	"id": "syncy-winky",
+	"version": "${version}",
+	"name": "Syncy Winky",
+	"description": "Syncs Minecraft settings across all instances and versions supported",
+	"authors": [
+		"z3roco01"
+	],
+	"contact": {
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "",
+	"icon": "assets/syncy-winky/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"client": [
+			"z3roco01.syncywinky.SyncyWinkyClient"
+		]
+	},
+	"mixins": [
+		{
+			"config": "syncy-winky.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.18.6",
+		"minecraft": "~26.1",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}
