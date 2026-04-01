@@ -8,9 +8,9 @@
 		"z3roco01"
 	],
 	"contact": {
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"sources": "https://github.com/z3roco01/Syncy-Winky"
 	},
-	"license": "",
+	"license": "GPL-3.0",
 	"icon": "assets/syncy-winky/icon.png",
 	"environment": "*",
 	"entrypoints": {
