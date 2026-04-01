@@ -3,6 +3,7 @@
 	"package": "z3roco01.syncywinky.mixin.client",
 	"compatibilityLevel": "JAVA_25",
 	"client": [
+		"OptionsMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
