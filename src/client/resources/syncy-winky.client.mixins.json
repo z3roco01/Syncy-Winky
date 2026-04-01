@@ -1,6 +1,6 @@
 {
 	"required": true,
-	"package": "z3roco01.sincywinky.mixin.client",
+	"package": "z3roco01.syncywinky.mixin.client",
 	"compatibilityLevel": "JAVA_25",
 	"client": [
 	],
