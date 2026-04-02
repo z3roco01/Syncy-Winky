@@ -3,7 +3,8 @@
 	"package": "z3roco01.syncywinky.mixin.client",
 	"compatibilityLevel": "${compat_level}",
 	"client": [
-		"OptionsMixin"
+		"OptionsMixin",
+		"OptionsScreenMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

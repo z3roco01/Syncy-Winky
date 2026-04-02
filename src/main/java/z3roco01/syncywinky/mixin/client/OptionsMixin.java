@@ -1,13 +1,14 @@
 package z3roco01.syncywinky.mixin.client;
 
-import net.minecraft.SharedConstants;
+import com.google.common.collect.ImmutableList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 //? if >=1.19.2 {
-import net.minecraft.client.OptionInstance;
 //?}
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
+import net.minecraft.server.packs.repository.Pack;
+import net.minecraft.server.packs.repository.PackRepository;
+import org.apache.commons.compress.utils.Lists;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,18 +16,32 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import z3roco01.syncywinky.ResourcePackUtil;
 import z3roco01.syncywinky.SyncyWinkyClient;
 
 import java.io.File;
+import java.util.Iterator;
+import java.util.List;
 
 @Mixin(Options.class)
-public class OptionsMixin {
+public abstract class OptionsMixin {
     @Shadow
     @Final
     private File optionsFile;
+
+    @Shadow
+    public List<String> resourcePacks;
+    @Shadow
+    public List<String> incompatibleResourcePacks;
+    @Shadow
+    protected Minecraft minecraft;
+
+    @Shadow
+    public abstract void save();
 
     @Unique
     private static File globalOptionsFile;
@@ -43,11 +58,11 @@ public class OptionsMixin {
     private static boolean narratorHotkey;
     *///?}
     //? if <=1.21.1 {
-    @Unique
+    /*@Unique
     private static String musicFrequency;
     @Unique
     private static String musicToast;
-    //?}
+    *///?}
 
     @Inject(method = "<init>", at = @At("HEAD"))
     private static void init(Minecraft minecraft, File workingDirectory, CallbackInfo ci) {
@@ -63,15 +78,15 @@ public class OptionsMixin {
 
         //? if <=1.18.2 {
         /*directionalAudio = false;
-        darknessEffectScale = 1.0;*/
-        //?}
+        darknessEffectScale = 1.0;
+        *///?}
         //? if <=1.19.2 {
         /*narratorHotkey = true;
         *///?}
         //? if <=1.21.1 {
-        musicFrequency = "DEFAULT";
+        /*musicFrequency = "DEFAULT";
         musicToast = "never";
-        //?}
+        *///?}
     }
 
     @Redirect(method = "load", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Options;optionsFile:Ljava/io/File;", opcode = Opcodes.GETFIELD))
@@ -107,8 +122,23 @@ public class OptionsMixin {
         /*narratorHotkey = fieldAccess.process("narratorHotkey", narratorHotkey);
         *///?}
         //? if <=1.21.1 {
-        musicFrequency = fieldAccess.process("musicFrequency", musicFrequency);
+        /*musicFrequency = fieldAccess.process("musicFrequency", musicFrequency);
         musicToast = fieldAccess.process("musicToast", musicToast);
-        //?}
+        *///?}
+    }
+
+    // dont modify the resourcepack list from the file, creates new list of actually applied packs
+    //? if >=1.20.1 {
+    @Inject(method = "updateResourcePacks", at = @At("HEAD"), cancellable = true)
+    private void updateResourcePacks(PackRepository packRepository, CallbackInfo ci) {
+        ResourcePackUtil.updateResourcePacks(packRepository, (Options)(Object)this, this.minecraft);
+        ci.cancel();
+    }
+    //?}
+
+    // have it apply packs from the proper list, instead of file list
+    @ModifyVariable(method = "loadSelectedResourcePacks", at = @At("STORE"))
+    private Iterator<String> loadPacksIterator(Iterator<String> iterator) {
+        return ResourcePackUtil.appliedResourcePacks.iterator();
     }
 }
