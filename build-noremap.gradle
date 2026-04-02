@@ -9,6 +9,7 @@ group = property('mod.group')
 
 def requiredJava = JavaVersion.VERSION_25
 def javaRelease = 25
+def accessWidener = "26.1.syncy-winky.accesswidener"
 
 repositories {
 	// Add repositories to retrieve artifacts from in here.
@@ -19,6 +20,8 @@ repositories {
 }
 
 loom {
+	accessWidenerPath = rootProject.file("src/main/resources/accesswideners/${accessWidener}")
+
 	mods {
 		"sincy-winky" {
 			sourceSet sourceSets.main
@@ -41,6 +44,7 @@ dependencies {
 processResources {
 	inputs.property "version", project.property('mod.version')
 	inputs.property "minecraft", project.property('mod.mc_dep')
+	inputs.property "aw_file", accessWidener
 
 	filesMatching("fabric.mod.json") {
 		expand(inputs.getProperties())
