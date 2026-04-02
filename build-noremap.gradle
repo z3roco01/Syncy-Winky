@@ -8,6 +8,7 @@ base.archivesName = property('mod.id') as String
 group = property('mod.group')
 
 def requiredJava = JavaVersion.VERSION_25
+def mixinCompatLevel = "JAVA_25"
 def javaRelease = 25
 def accessWidener = "26.1.syncy-winky.accesswidener"
 
@@ -48,6 +49,10 @@ processResources {
 
 	filesMatching("fabric.mod.json") {
 		expand(inputs.getProperties())
+	}
+
+	filesMatching("syncy-winky.client.mixins.json") {
+		expand "compat_level" : mixinCompatLevel
 	}
 }
 

@@ -18,6 +18,12 @@ def javaRelease =
 		sc.current.parsed.matches('>=1.17')   ? 16 :
 		8
 
+def mixinCompatLevel=
+		sc.current.parsed.matches('>=1.20.6') ? "JAVA_21" :
+		sc.current.parsed.matches('>=1.18')   ? "JAVA_17" :
+		sc.current.parsed.matches('>=1.17')   ? "JAVA_16" :
+		"JAVA_1_8"
+
 def accessWidener =
 		sc.current.parsed.matches('>=1.21.1') ? "1.21.1.syncy-winky.accesswidener" :
 		sc.current.parsed.matches('>=1.20.1') ? "1.20.1.syncy-winky.accesswidener" :
@@ -62,6 +68,10 @@ processResources {
 
 	filesMatching("fabric.mod.json") {
 		expand(inputs.getProperties())
+	}
+
+	filesMatching("syncy-winky.client.mixins.json") {
+		expand "compat_level" : mixinCompatLevel
 	}
 }
 
