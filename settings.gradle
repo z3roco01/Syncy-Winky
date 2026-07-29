@@ -25,6 +25,7 @@ stonecutter {
 	create(getRootProject()) {
 		versions "1.18.2", "1.19.2", "1.20.1", "1.21.1"
 		versions("26.1").buildscript 'build-noremap.gradle'
+		versions("26.2").buildscript 'build-noremap.gradle'
 		vcsVersion = "26.1"
 	}
 }

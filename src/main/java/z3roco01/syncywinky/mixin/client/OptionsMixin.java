@@ -1,6 +1,7 @@
 package z3roco01.syncywinky.mixin.client;
 
 import com.google.common.collect.ImmutableList;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 //? if >=1.19.2 {
@@ -24,6 +25,7 @@ import z3roco01.syncywinky.ResourcePackUtil;
 import z3roco01.syncywinky.SyncyWinkyClient;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -63,6 +65,19 @@ public abstract class OptionsMixin {
     @Unique
     private static String musicToast;
     *///?}
+    //? if <=26.1.2 {
+    @Unique
+    private static String preferredGraphicsBackend;
+    @Unique
+    private static String keyFriends;
+    @Unique
+    private static String sharePresence;
+    @Unique
+    private static boolean inGameNotification;
+     //?}
+
+    @Unique
+    private static PackRepository packRepository = null;
 
     @Inject(method = "<init>", at = @At("HEAD"))
     private static void init(Minecraft minecraft, File workingDirectory, CallbackInfo ci) {
@@ -87,6 +102,12 @@ public abstract class OptionsMixin {
         /*musicFrequency = "DEFAULT";
         musicToast = "never";
         *///?}
+        //? if <=26.1.2 {
+        preferredGraphicsBackend = "default";
+        keyFriends = "key.keyboard.o";
+        sharePresence = "all";
+        inGameNotification = false;
+        //?}
     }
 
     @Redirect(method = "load", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Options;optionsFile:Ljava/io/File;", opcode = Opcodes.GETFIELD))
@@ -125,6 +146,18 @@ public abstract class OptionsMixin {
         /*musicFrequency = fieldAccess.process("musicFrequency", musicFrequency);
         musicToast = fieldAccess.process("musicToast", musicToast);
         *///?}
+        //? if <=26.1.2 {
+        preferredGraphicsBackend = fieldAccess.process("preferredGraphicsBackend", preferredGraphicsBackend);
+        keyFriends = fieldAccess.process("keyFriends", keyFriends);
+        sharePresence = fieldAccess.process("sharePresence", sharePresence);
+        inGameNotification = fieldAccess.process("inGameNotification", inGameNotification);
+        //?}
+
+        try {
+            ResourcePackUtil.loadResourcePacks();
+        }catch(IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // dont modify the resourcepack list from the file, creates new list of actually applied packs
